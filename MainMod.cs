@@ -29,6 +29,7 @@ namespace CustomTV
         public static KeyCode Seekbackward { get; private set; } = KeyCode.LeftArrow;
         public static float AudioVolume { get; private set; } = 1.0f;
         public static float SeekAmount { get; private set; } = 5.0f;
+        public static bool Shuffle { get; private set; } = true;
 
         private static readonly string modsFolderPath = Path.Combine(Application.dataPath, "../Mods");
         private static readonly string tvFolderPath = Path.Combine(modsFolderPath, "TV");
@@ -58,7 +59,8 @@ Seek Backward = LeftArrow
 
 [Values]
 Volume = 100
-Seek Amount = 5");
+Seek Amount = 5
+Shuffle = True");
                 MelonLogger.Msg("CustomTVConfig.ini created with default values.");
             }
 
@@ -113,6 +115,10 @@ Seek Amount = 5");
                         {
                             SeekAmount = seekVal;
                         }
+                        break;
+                    case "shuffle":
+                        if (bool.TryParse(value.ToLower(), out bool shuffle))
+                            Shuffle = shuffle;
                         break;
                 }
             }
@@ -334,6 +340,16 @@ Seek Amount = 5");
             {
                 newVideoFiles.Shuffle(rng);
                 videoFiles = newVideoFiles;
+                if (Config.Shuffle)
+                {
+                    MelonLogger.Msg("Shuffling videos.");
+                    videoFiles.Shuffle(rng);
+                }
+                else
+                {
+                    MelonLogger.Msg("Sorting videos.");
+                    videoFiles = newVideoFiles.OrderBy(f => f, new SmartEpisodeComparer()).ToList();
+                }
             }
             int newIndex = first ? 0 : forward ? (currentVideoIndex + 1) % videoFiles.Count : (currentVideoIndex - 1 + videoFiles.Count) % videoFiles.Count;         
 
