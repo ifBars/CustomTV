@@ -707,6 +707,10 @@
 			<HintPath>C:\Program Files (x86)\Steam\steamapps\common\Schedule I\Schedule I_Data\Managed\Unity.Timeline.dll</HintPath>
 		</Reference>
 	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Remove="libs\**" />
+	  <None Remove="libs\**" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Include="MainMod.cs" />
